@@ -1,37 +1,46 @@
-setwd("~/Desktop/github/datasciencecoursera/")
-getwd()
-## Put comments here that give an overall description of what your
-## functions do
+## These function is designed to caching the inverse of a matrix.
+## Caching is used because Matrix inversion is usually a costly computation
+## and will potentially time-consuming computations.
 
-## Write a short comment describing this function
+
+## These function (makeCacheMatrix) creates a special "matrix" object 
+## that can cache its inverse.
+## Special "matrix" is actually a list containing function to
+##       1. set the value of the matrix
+##       2. get the value of the matrix
+##       3. set the value of the matrix inversion
+##       4. get the value of the matrix inversion
 
 makeCacheMatrix <- function(x = matrix()) {
-        s <- NULL
+        inv <- NULL
         set <- function(y) {
                 x <<- y
-                s <<- NULL
+                inv <<- NULL
         }
         get <- function() x
-        setsolve <- function(solve) s <<- solve
-        getsolve <- function() s
+        setInverse <- function(solve) inv <<- solve
+        getInverse <- function () inv
         list(set = set, get = get,
-             setsolve = setsolve,
-             getsolve = getsolve)
+             setInverse = setInverse,
+             getInverse = getInverse)
 }
 
-
-## Write a short comment describing this function
+## These function computes the inverse of the special "matrix"
+## returned by makeCacheMatrix above
+## if you try to cacheSolve on the matrix that is same with special
+## "matrix", An informative message will be shown and
+## result is returned instead.
 
 cacheSolve <- function(x, ...) {
-        s <- x$getsolve()
-        if (!is.null(s)) {
+        inv <- x$getInverse()
+        if (!is.null(inv)) {
                 message("getting cached data")
-                return(s)
+                return(inv)
         }
-        data <- x$get
-        s <- solve(data, ...)
-        x <- setsolve(s)
-        s
-        ## Return a matrix that is the inverse of 'x'
+        data <- x$get()
+        inv <- solve(data, ...)
+        x$setInverse(inv)
+        inv
 }
-makeCacheMatrix()
+
+
